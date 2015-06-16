@@ -1,4 +1,4 @@
-Последовательность создания сервисов Java (на примере Ofbiz), которые понимает 1C
+Последовательность создания сервисов Java, которые понимает 1C
 
 Рассмотрим на примере создания сервиса TaskService
 
@@ -72,7 +72,7 @@ str = "";
 str = str + ", " + lst.Получить(i).name;	  		
 КонецЦикла;
 
-3. Для создания на стороне Ofbiz используем Axis2 сервлет. (Необходмо дополнить библиотеки Axis2, входящие в стандартую поставку офбиза)
+3. Для создания на стороне Java используем https://github.com/apache/axis2-java сервлет. (Необходмо дополнить библиотеки Axis2, входящие в стандартую поставку офбиза)
 
 В папке App создаём следующую структуру:
 \---src
@@ -343,7 +343,7 @@ public class TaskClientService {
 	        result.put("result", port.addTask(name, description));
 			return result;
 		} catch (Exception ex) {
-			return ServiceUtil.returnError("OFBIZ Error: " + ex.getMessage());
+			return ServiceUtil.returnError("Error: " + ex.getMessage());
 		}
 		
 	}
@@ -354,7 +354,7 @@ public class TaskClientService {
 
 Интеграция данного сервиса в событие офбиз:
 
-1. В файл описания сервисов модуля gw21c/servicedef/services.xml добавляем описание сервиса gw21cAddTask, предназначенного для связи вышенаписанного кода с системой событий OFBiz.
+1. В файл описания сервисов модуля gw21c/servicedef/services.xml добавляем описание сервиса gw21cAddTask, предназначенного для связи вышенаписанного кода с системой событий на Java.
 
     <service name="gw21cAddTask" engine="java" export="true" invoke="gw21cAddTask"
     	location="com.cis.gw21c.client.TaskClientService">
@@ -373,7 +373,7 @@ public class TaskClientService {
     	<attribute name="result" mode="OUT" type="String" optional="false" />
     </service>
 
-С этого момента  клиентский код можно запускать из интерфейса OFBiz (webtools->service->runService).
+С этого момента  клиентский код можно запускать из интерфейса (webtools->service->runService).
 
 2. Добавляем данный код в определение сервиса события в нашем случае это будет файл ofbiz/applications/workeffort/script/org/ofbiz/workeffort/workeffort/ WorkEffortSimpleServices.xml. Вставляемые строки в фрагменте отмечены жирным.
 
@@ -393,4 +393,4 @@ public class TaskClientService {
         <field-to-result field="workEffortId"/>
     </simple-method>
 
-С этого момента TaskClientService начинает работать как событие офбиза.
+С этого момента TaskClientService начинает работать как событие.
